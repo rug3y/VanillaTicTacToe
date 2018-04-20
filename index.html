@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Vanilla Tic-Tac-Toe</title>
+</head>
+<body>
+  <div class="controls">
+    <div class="controls__button">X</div>
+    <div class="controls__button">O</div>
+    <div class="controls__button__reset">RESET</div>
+  </div>
+  <div class="board">
+    <div class="board__row">
+      <div class="board__square" data-square="1">
+        <span class="board__square__piece" id="1"></span>
+      </div>
+      <div class="board__square" data-square="2">
+        <span class="board__square__piece" id="2"></span>
+      </div>
+      <div class="board__square" data-square="3">
+        <span class="board__square__piece" id="3"></span>
+      </div>
+    </div>
+    <div class="board__row">
+      <div class="board__square" data-square="4">
+        <span class="board__square__piece" id="4"></span>
+      </div>
+      <div class="board__square" data-square="5">
+        <span class="board__square__piece" id="5"></span>
+      </div>
+      <div class="board__square" data-square="6">
+        <span class="board__square__piece" id="6"></span>
+      </div>
+    </div>
+    <div class="board__row">
+      <div class="board__square" data-square="7">
+        <span class="board__square__piece" id="7"></span>
+      </div>
+      <div class="board__square" data-square="8">
+        <span class="board__square__piece" id="8"></span>
+      </div>
+      <div class="board__square" data-square="9">
+        <span class="board__square__piece" id="9"></span>
+      </div>
+    </div>
+  </div>
+    
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    .controls {
+      height:     100px;
+      width:      50%;
+      margin:     0 auto;
+      background: gray;
+      display:    flex;
+    }
+
+    .controls__button, .controls__button__reset {
+      height: 80px;
+      width: 80px;
+      margin: 10px;
+      background: white;
+      text-align: center;
+      line-height: 80px;
+    }
+
+    .board {
+      width:  50%;
+      margin: 0 auto;
+    }
+
+    .board__row {
+      display:     flex;
+      width:       100%;
+      margin:      0 auto;
+      align-items: center;
+    }
+
+    .board__square {
+      width:      15%;
+      padding:    15%;
+      box-sizing: border-box;
+      background: gray;
+      margin:     10px;
+      position: relative;
+    }
+
+    .board__square__piece {
+      position:    absolute;
+      top:         30%;
+      left:        30%;
+      font-size:   8vw;
+    }
+  </style>
+
+  <script>
+    let player = '';
+    let computer = '';
+    let currentToken = '';
+    let playerHasWon = false;
+    let computerHasWon = false;
+    let tieGame = false;
+
+    const square1 = document.getElementById("1");
+    const square2 = document.getElementById("2");
+    const square3 = document.getElementById("3");
+    const square4 = document.getElementById("4");
+    const square5 = document.getElementById("5");
+    const square6 = document.getElementById("6");
+    const square7 = document.getElementById("7");
+    const square8 = document.getElementById("8");
+    const square9 = document.getElementById("9");
+
+    const squares = [
+      square1, square2, square3,
+      square4, square5, square6,
+      square7, square8, square9
+    ]
+
+
+    function setTokenValue() {
+      player = this.innerHTML;
+      currentToken = this.innerHTML;
+      if(player === 'X') {
+        computer = 'O'
+      } else {
+        computer = 'X'
+      }
+    }
+
+    function resetGame() {
+      square1.innerHTML = '';
+      square2.innerHTML = '';
+      square3.innerHTML = '';
+      square4.innerHTML = '';
+      square5.innerHTML = '';
+      square6.innerHTML = '';
+      square7.innerHTML = '';
+      square8.innerHTML = '';
+      square9.innerHTML = '';
+      player = '';
+      computer = '';
+    }
+
+    function computerTurn(computerToken) {
+      // Find the first empty square and choose it.
+      // This logic could be more advanced.
+      const emptySquare = squares.find(i => i.innerHTML == '');
+      emptySquare.innerHTML = computerToken;
+      if(currentToken === 'O') {
+        currentToken = 'X'
+      } else {
+        currentToken = 'O'
+      }
+    }
+
+
+    // Checkfor various win/ lose/ tie conditions and alert user/ reset game
+    function checkConditions() {
+      const conditions = [
+        [square1.innerHTML, square2.innerHTML, square3.innerHTML],
+        [square4.innerHTML, square5.innerHTML, square6.innerHTML],
+        [square7.innerHTML, square8.innerHTML, square9.innerHTML],
+        [square1.innerHTML, square4.innerHTML, square7.innerHTML],
+        [square2.innerHTML, square5.innerHTML, square8.innerHTML],
+        [square3.innerHTML, square6.innerHTML, square9.innerHTML],
+        [square1.innerHTML, square5.innerHTML, square9.innerHTML],
+        [square3.innerHTML, square5.innerHTML, square7.innerHTML]
+      ]
+
+      for(let arr of conditions) {
+        if(arr[0] === player && arr[1] === player && arr[2] === player) {
+          playerHasWon = true;
+        } else if (arr[0] === computer && arr[1] === computer && arr[2] === computer) {
+          computerHasWon = true;
+        }
+      }
+
+      let playedSquares = 0;
+
+      for(let i of squares) {
+        if(i.innerHTML != '') {
+          playedSquares += 1;
+        }
+      }
+
+      if(playerHasWon === true) {
+        alert("Player has won the game");
+        playerHasWon = false;
+        computerHasWon = false;
+        tieGame = false;
+        resetGame();
+      } else if(computerHasWon === true) {
+        alert("Computer has won the game");
+        playerHasWon = false;
+        computerHasWon = false;
+        tieGame = false;
+        resetGame();
+      }
+
+      if(playedSquares === squares.length && playerHasWon === false && computerHasWon === false) {
+        alert("The game is a tie");
+        playerHasWon = false;
+        computerHasWon = false;
+        tieGame = false;
+        resetGame();
+      }
+    }
+    
+
+    function squareClick() {
+      if(player != '') {
+        let squareValue = this.getElementsByClassName('board__square__piece')[0].innerHTML;
+        if(squareValue === '') {
+          this.getElementsByClassName('board__square__piece')[0].innerHTML = currentToken;
+          if(currentToken === 'O') {
+          currentToken = 'X'
+        } else {
+          currentToken = 'O'
+        }
+        computerTurn(currentToken);
+        checkConditions();
+        } else {
+          alert("Please choose an empty square.")
+        }
+      } else {
+        alert("Please select X or O to begin the game.");
+      }
+    }
+
+    // Click event listers
+    document.querySelectorAll('.controls__button')
+      .forEach(
+        button => button.addEventListener('click', setTokenValue)
+      );
+
+    document.querySelectorAll('.board__square')
+      .forEach(
+        square => square.addEventListener('click', squareClick)
+      );
+
+    document.querySelector('.controls__button__reset').addEventListener('click', resetGame);
+
+  </script>
+</body>
+</html>
